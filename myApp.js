@@ -53,59 +53,72 @@ const findPeopleByName = (personName, done) => {
 };
 
 const findOneByFood = (food, done) => {
-   Person.findOne({ favoriteFoods: food }, (err, data) => {
-     if(err) console.error(err);
-     done(null, data);
-   })
+  Person.findOne({ favoriteFoods: food }, (err, data) => {
+    if (err) console.error(err);
+    done(null, data);
+  });
 };
 
 const findPersonById = (personId, done) => {
-  Person.findById({ _id: personId }, (err,data) => {
-    if(err) console.error(err);
+  Person.findById({ _id: personId }, (err, data) => {
+    if (err) console.error(err);
     done(null, data);
-  })
+  });
 };
 
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
-  
+
   Person.findById(personId, (err, data) => {
-    if(err) console.error(err);
+    if (err) console.error(err);
 
     data.favoriteFoods.push(foodToAdd);
     data.save((err, data) => {
-      if(err) console.error(err);
+      if (err) console.error(err);
       done(null, data);
-    })
-  })
-
+    });
+  });
 };
 
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
-  
-  Person.findOneAndUpdate({ name: personName }, {"$set": {"age" : ageToSet}}, {new : true},
-  (err, data) => {
-    if(err) console.error(err);
-    done(null, data);
-  });
 
+  Person.findOneAndUpdate(
+    { name: personName },
+    { $set: { age: ageToSet } },
+    { new: true },
+    (err, data) => {
+      if (err) console.error(err);
+      done(null, data);
+    }
+  );
 };
 
 const removeById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findByIdAndRemove(personId, (err, data) => {
+    if (err) console.error(err);
+    done(null, data);
+  });
 };
 
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
 
-  done(null /*, data*/);
+  Person.remove({ name: nameToRemove }, (err, data) => {
+    if (err) console.error(err);
+    done(null, data);
+  });
 };
 
 const queryChain = (done) => {
   const foodToSearch = "burrito";
-
-  done(null /*, data*/);
+  Person.find({ favoriteFoods: foodToSearch }, { age: 0 })
+    .sort({ name: 1 })
+    .limit(2)
+    .exec((err, data) => {
+      if (err) console.error(err);
+      done(null, data);
+    });
 };
 
 /** **Well Done !!**
